@@ -6,6 +6,8 @@ all:
 
       # User-provided values
       os_subnet_range: '10.0.0.0/16'
+      # uncomment for dual stack
+      # os_subnet6_range: 'd2e:6f44:5dd8:c956::/64'
       os_flavor_master: 'm1.xlarge'
       os_flavor_worker: 'm1.large'
       os_image_rhcos: 'rhcos'
@@ -25,7 +27,6 @@ all:
       os_cp_nodes_number: 3
 
       # Number of provisioned Compute nodes.
-      # 3 is the minimum number for a fully-functional cluster.
       os_compute_nodes_number: 0
 
       # The IP addresses of DNS servers to be used for the DNS resolution of
@@ -70,3 +71,6 @@ all:
       # Be aware that the 10 and 11 of the machineNetwork will
       # be taken by neutron dhcp by default, and wont be available.
       os_ingressVIP: "{{ os_subnet_range | ansible.utils.next_nth_usable(7) }}"
+
+      # Set control-plane nodes to schedule workloads when number of compute nodes is zero
+      os_master_schedulable: "{{ os_compute_nodes_number | int == 0 }}"
